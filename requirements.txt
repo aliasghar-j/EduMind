@@ -1,0 +1,21 @@
+# EduMind backend dependencies (Google Sheets-based datastore)
+
+# Core web framework
+Flask
+
+# Cross-Origin Resource Sharing for frontend communication
+Flask-CORS
+
+# Environment variable management
+python-dotenv
+
+# Google authentication libraries (OAuth placeholder)
+google-auth
+google-auth-oauthlib
+
+# Google Sheets client options (choose one in later phase)
+# We keep both available for flexibility; you can remove one later.
+gspread
+google-api-python-client
+google-auth-httplib2
+requests

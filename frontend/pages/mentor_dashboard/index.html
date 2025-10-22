@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EduMind - Mentor Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#5b13ec",
+              "background-light": "#f6f6f8",
+              "background-dark": "#161022",
+            },
+            fontFamily: {
+              display: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.5rem",
+              lg: "1rem",
+              xl: "1.5rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+<style></style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="flex flex-col min-h-screen">
+<header class="bg-white dark:bg-slate-800/10 shadow-sm px-6 py-4 flex items-center justify-between w-full z-10">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-3xl text-primary">school</span>
+<h1 class="text-xl font-bold text-slate-800 dark:text-white">EduMind</h1>
+</div>
+<div class="flex items-center gap-4 min-w-0">
+<span id="mentorName" class="font-semibold text-slate-700 dark:text-slate-300 truncate">Mentor</span>
+<img id="mentorAvatar" alt="Mentor profile picture" class="w-10 h-10 rounded-full object-cover shrink-0" loading="lazy" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-kXUKK-jvh8YvB4p3V_m6AW_psdP-CM9A5CrOMWNVhxoawHb0RGpvrMIUAtT9WAsNOLajv9xIoz8QbGUJLC-C4YDbQom6xWl64ZKvsj7zXyqrGM-CHi6vT652X9FdGVXARyJo9IX7Sm92lgkJBUGIgq_K5XEAFE4xEGwMDlGbk3XPiT09iFOD3WBFE_aX8RceVGHAa-zx8bMIURfuYmlpwHFoHBBlMt07SvAdI_OIqc4AhGkgHY8bbk_2op1WsR_iICJnB6-hIvA"/>
+</div>
+</header>
+<main class="flex-1 p-6 lg:p-8">
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2 space-y-8">
+<div class="bg-white dark:bg-slate-800/10 rounded-xl shadow-lg p-6">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-2xl font-bold text-slate-800 dark:text-white">Mentor Profile</h2>
+<button class="flex items-center gap-2 text-sm font-medium text-primary hover:underline">
+<span class="material-symbols-outlined">edit</span>
+                  Edit Profile
+                </button>
+</div>
+<div class="space-y-4">
+<!-- Interests section: replace static chips with dynamic container and add button -->
+<div>
+  <h3 class="font-semibold text-slate-600 dark:text-slate-300">Interests</h3>
+  <div id="mentor-interests-container" class="flex flex-wrap gap-2 mt-2">
+    <span class="text-sm text-slate-500 dark:text-slate-400">Loading interests...</span>
+  </div>
+  <div class="mt-3">
+    <button id="mentor-add-interest-btn" class="flex min-w-[84px] cursor-pointer items-center justify-center rounded-lg h-9 px-3 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] transition-transform hover:scale-105">Add Interest</button>
+  </div>
+</div>
+
+
+<div>
+<!-- Teaching Areas section: replace static chips with dynamic container and add button -->
+<div>
+  <h3 class="font-semibold text-slate-600 dark:text-slate-300">Teaching Areas</h3>
+  <div id="mentor-areas-container" class="flex flex-wrap gap-2 mt-2">
+    <span class="text-sm text-slate-500 dark:text-slate-400">Loading areas...</span>
+  </div>
+  <div class="mt-3">
+    <button id="mentor-add-area-btn" class="flex min-w-[84px] cursor-pointer items-center justify-center rounded-lg h-9 px-3 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] transition-transform hover:scale-105">Add Area</button>
+  </div>
+</div>
+
+
+<div>
+  <div class="flex items-center justify-between">
+    <h3 class="font-semibold text-slate-600 dark:text-slate-300">Career Background</h3>
+    <div class="flex items-center gap-2">
+      <button id="mentor-edit-career-btn" class="flex items-center gap-2 text-sm font-medium text-primary hover:underline">
+        <span class="material-symbols-outlined">edit</span>
+        Edit
+      </button>
+      <button id="mentor-clear-career-btn" class="flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400 hover:underline">Clear</button>
+    </div>
+  </div>
+  <div id="mentor-career-background" class="text-slate-700 dark:text-slate-400 mt-1 whitespace-pre-wrap">Loading career background...</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-800/10 rounded-xl shadow-lg p-6">
+<h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-4">AI-Powered Paper Correction</h2>
+<div class="border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-8 text-center">
+<span class="material-symbols-outlined text-5xl text-slate-400 dark:text-slate-500">upload_file</span>
+<p class="mt-2 font-medium text-slate-600 dark:text-slate-300">Drag &amp; drop student answer sheets here</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">or</p>
+<button class="mt-2 bg-primary text-white font-semibold px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors">Browse Files</button>
+</div>
+<div class="mt-6">
+<h3 class="font-semibold text-slate-700 dark:text-slate-200">Recent Corrections</h3>
+<div class="mt-4 space-y-4">
+<div class="bg-slate-50 dark:bg-slate-700/30 p-4 rounded-lg flex items-center justify-between">
+<div>
+<p class="font-medium text-slate-800 dark:text-slate-100">James T. - "Ethics of Autonomous Vehicles"</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">Status: <span class="text-green-500">AI Correction Complete</span></p>
+</div>
+<button class="text-sm font-medium text-primary hover:underline">Add Remarks</button>
+</div>
+<div class="bg-slate-50 dark:bg-slate-700/30 p-4 rounded-lg flex items-center justify-between">
+<div>
+<p class="font-medium text-slate-800 dark:text-slate-100">Priya S. - "Cognitive Bias in LLMs"</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">Status: <span class="text-orange-500">Pending Manual Review</span></p>
+</div>
+<button class="text-sm font-medium text-primary hover:underline">Review Now</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="space-y-8">
+<div class="bg-white dark:bg-slate-800/10 rounded-xl shadow-lg p-6">
+<h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-4">Schedule Sessions</h2>
+<div class="bg-primary/5 dark:bg-primary/10 p-4 rounded-lg">
+<div class="flex items-center justify-between mb-2">
+<button class="p-1 rounded-full hover:bg-primary/10 dark:hover:bg-primary/20"><span class="material-symbols-outlined text-slate-600 dark:text-slate-300">chevron_left</span></button>
+<h4 class="font-semibold text-slate-700 dark:text-slate-200">October 2023</h4>
+<button class="p-1 rounded-full hover:bg-primary/10 dark:hover:bg-primary/20"><span class="material-symbols-outlined text-slate-600 dark:text-slate-300">chevron_right</span></button>
+</div>
+<div class="grid grid-cols-7 gap-1 text-center text-sm text-slate-500 dark:text-slate-400">
+<div class="font-medium">S</div>
+<div class="font-medium">M</div>
+<div class="font-medium">T</div>
+<div class="font-medium">W</div>
+<div class="font-medium">T</div>
+<div class="font-medium">F</div>
+<div class="font-medium">S</div>
+<div>24</div>
+<div>25</div>
+<div>26</div>
+<div class="relative"><span class="z-10 relative">27</span><div class="absolute inset-0 bg-primary/20 rounded-full"></div></div>
+<div>28</div>
+<div>29</div>
+<div>30</div>
+<div>1</div>
+<div>2</div>
+<div class="relative"><span class="z-10 relative text-white">3</span><div class="absolute inset-0 bg-primary rounded-full"></div></div>
+<div>4</div>
+<div>5</div>
+<div>6</div>
+<div>7</div>
+</div>
+</div>
+<div class="mt-6">
+<h3 class="font-semibold text-slate-700 dark:text-slate-200">Upcoming Sessions</h3>
+<div class="mt-4 space-y-3">
+<div class="bg-slate-50 dark:bg-slate-700/30 p-3 rounded-lg flex items-center gap-4">
+<div class="bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-300 p-2 rounded-lg text-center">
+<p class="text-xs font-bold">OCT</p>
+<p class="text-lg font-extrabold">28</p>
+</div>
+<div>
+<p class="font-medium text-slate-800 dark:text-slate-100">Career Guidance with Alex</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">10:00 AM - 10:45 AM</p>
+</div>
+<span class="ml-auto bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-300 text-xs font-bold px-2 py-1 rounded-full">CONFIRMED</span>
+</div>
+<div class="bg-slate-50 dark:bg-slate-700/30 p-3 rounded-lg flex items-center gap-4">
+<div class="bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-300 p-2 rounded-lg text-center">
+<p class="text-xs font-bold">NOV</p>
+<p class="text-lg font-extrabold">03</p>
+</div>
+<div>
+<p class="font-medium text-slate-800 dark:text-slate-100">Thesis Review with Sarah</p>
+<p class="text-sm text-slate-500 dark:text-slate-400">2:00 PM - 3:00 PM</p>
+</div>
+<span class="ml-auto bg-yellow-100 dark:bg-yellow-900/50 text-yellow-600 dark:text-yellow-300 text-xs font-bold px-2 py-1 rounded-full">PENDING</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+<script>
+(function(){
+  async function loadUser(){
+    try {
+      const res = await fetch('/api/auth/me', { credentials: 'include' });
+      if (!res.ok) return;
+      const data = await res.json();
+      const nameEl = document.getElementById('mentorName');
+      const avatarEl = document.getElementById('mentorAvatar');
+      if (data && data.name) {
+        nameEl.textContent = data.name;
+      }
+      if (data && data.picture) {
+        avatarEl.src = data.picture;
+        avatarEl.alt = (data.name ? data.name : 'Mentor') + ' profile picture';
+      }
+      // Trigger a background sync to ensure mentor/student rows exist
+      try {
+        await fetch('/api/auth/sync', { method: 'POST', credentials: 'include' });
+      } catch (_) {}
+    } catch (e) {
+      // ignore errors silently
+    }
+  }
+  document.addEventListener('DOMContentLoaded', loadUser);
+})();
+</script>
+
+</body></html>
+
+<!-- Add Interest Modal (Mentor) -->
+<div id="mentor-add-interest-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
+  <div class="bg-white dark:bg-gray-900 rounded-xl p-6 w-full max-w-md shadow-lg">
+    <h3 class="text-lg font-bold mb-3">Add Interest</h3>
+    <input id="mentor-new-interest-input" type="text" class="w-full px-3 py-2 border rounded-lg dark:bg-gray-800" placeholder="e.g. Machine Learning"/>
+    <div class="mt-4 flex justify-end gap-2">
+      <button id="mentor-add-interest-cancel" class="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800">Cancel</button>
+      <button id="mentor-add-interest-save" class="px-4 py-2 rounded-lg bg-primary text-white">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Teaching Area Modal (Mentor) -->
+<div id="mentor-add-area-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
+  <div class="bg-white dark:bg-gray-900 rounded-xl p-6 w-full max-w-md shadow-lg">
+    <h3 class="text-lg font-bold mb-3">Add Teaching Area</h3>
+    <input id="mentor-new-area-input" type="text" class="w-full px-3 py-2 border rounded-lg dark:bg-gray-800" placeholder="e.g. Computer Science"/>
+    <div class="mt-4 flex justify-end gap-2">
+      <button id="mentor-add-area-cancel" class="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800">Cancel</button>
+      <button id="mentor-add-area-save" class="px-4 py-2 rounded-lg bg-primary text-white">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // Existing loadUser remains
+  async function loadMentorInterests(){
+    try {
+      const res = await fetch('/api/mentor/me/interests', { credentials: 'include' });
+      const container = document.getElementById('mentor-interests-container');
+      if (!res.ok){
+        container.innerHTML = '<span class="text-sm text-slate-500 dark:text-slate-400">No interests found</span>';
+        return;
+      }
+      const data = await res.json();
+      const interests = Array.isArray(data) ? data : (data.interests || []);
+      renderMentorInterests(interests);
+    } catch(e){
+      const container = document.getElementById('mentor-interests-container');
+      container.innerHTML = '<span class="text-sm text-slate-500 dark:text-slate-400">Error loading interests</span>';
+    }
+  }
+
+  function renderMentorInterests(interests){
+    const container = document.getElementById('mentor-interests-container');
+    if (!interests || interests.length === 0){
+      container.innerHTML = '<span class="text-sm text-slate-500 dark:text-slate-400">No interests added yet</span>';
+      return;
+    }
+    container.innerHTML = interests.map(i => `
+      <div class="flex items-center gap-1 bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">
+        <span>${i}</span>
+        <button onclick="removeMentorInterest('${i.replace(/'/g, "&#39;")}')" class="ml-1 text-primary/80 hover:text-primary">×</button>
+      </div>
+    `).join('');
+  }
+
+  async function submitAddMentorInterest(){
+    const input = document.getElementById('mentor-new-interest-input');
+    const interest = (input?.value || '').trim();
+    if (!interest){ alert('Please enter an interest'); return; }
+    try {
+      const res = await fetch('/api/mentor/me/interests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ interest })
+      });
+      if (res.ok){ closeAddMentorInterestModal(); await loadMentorInterests(); }
+      else { alert('Error adding interest'); }
+    } catch(e){ alert('Error adding interest'); }
+  }
+
+  window.removeMentorInterest = async function(interest){
+    try {
+      const res = await fetch('/api/mentor/me/interests', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ interest })
+      });
+      if (res.ok){ await loadMentorInterests(); }
+      else { alert('Error removing interest'); }
+    } catch(e){ alert('Error removing interest'); }
+  }
+
+  function openAddMentorInterestModal(){
+    const modal = document.getElementById('mentor-add-interest-modal');
+    const input = document.getElementById('mentor-new-interest-input');
+    modal.classList.remove('hidden');
+    input.value = '';
+    input.focus();
+  }
+  function closeAddMentorInterestModal(){
+    document.getElementById('mentor-add-interest-modal').classList.add('hidden');
+  }
+
+  // Teaching areas
+  async function loadMentorAreas(){
+    try {
+      const res = await fetch('/api/mentor/me/teaching-areas', { credentials: 'include' });
+      const container = document.getElementById('mentor-areas-container');
+      if (!res.ok){
+        container.innerHTML = '<span class="text-sm text-slate-500 dark:text-slate-400">No areas found</span>';
+        return;
+      }
+      const data = await res.json();
+      const areas = Array.isArray(data) ? data : (data.areas || []);
+      renderMentorAreas(areas);
+    } catch(e){
+      const container = document.getElementById('mentor-areas-container');
+      container.innerHTML = '<span class="text-sm text-slate-500 dark:text-slate-400">Error loading areas</span>';
+    }
+  }
+
+  function renderMentorAreas(areas){
+    const container = document.getElementById('mentor-areas-container');
+    if (!areas || areas.length === 0){
+      container.innerHTML = '<span class="text-sm text-slate-500 dark:text-slate-400">No teaching areas added yet</span>';
+      return;
+    }
+    container.innerHTML = areas.map(a => `
+      <div class="flex items-center gap-1 bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300 px-3 py-1 rounded-full text-sm">
+        <span>${a}</span>
+        <button onclick="removeMentorArea('${a.replace(/'/g, "&#39;")}')" class="ml-1 text-blue-600/80 dark:text-blue-300/80 hover:opacity-90">×</button>
+      </div>
+    `).join('');
+  }
+
+  async function submitAddMentorArea(){
+    const input = document.getElementById('mentor-new-area-input');
+    const area = (input?.value || '').trim();
+    if (!area){ alert('Please enter a teaching area'); return; }
+    try {
+      const res = await fetch('/api/mentor/me/teaching-areas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ area })
+      });
+      if (res.ok){ closeAddMentorAreaModal(); await loadMentorAreas(); }
+      else { alert('Error adding area'); }
+    } catch(e){ alert('Error adding area'); }
+  }
+
+  window.removeMentorArea = async function(area){
+    try {
+      const res = await fetch('/api/mentor/me/teaching-areas', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ area })
+      });
+      if (res.ok){ await loadMentorAreas(); }
+      else { alert('Error removing area'); }
+    } catch(e){ alert('Error removing area'); }
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    // Wire events
+    const addInterestBtn = document.getElementById('mentor-add-interest-btn');
+    const addAreaBtn = document.getElementById('mentor-add-area-btn');
+    const saveInterestBtn = document.getElementById('mentor-add-interest-save');
+    const cancelInterestBtn = document.getElementById('mentor-add-interest-cancel');
+    const saveAreaBtn = document.getElementById('mentor-add-area-save');
+    const cancelAreaBtn = document.getElementById('mentor-add-area-cancel');
+
+    if (addInterestBtn) addInterestBtn.addEventListener('click', openAddMentorInterestModal);
+    if (saveInterestBtn) saveInterestBtn.addEventListener('click', submitAddMentorInterest);
+    if (cancelInterestBtn) cancelInterestBtn.addEventListener('click', closeAddMentorInterestModal);
+
+    if (addAreaBtn) addAreaBtn.addEventListener('click', openAddMentorAreaModal);
+    if (saveAreaBtn) saveAreaBtn.addEventListener('click', submitAddMentorArea);
+    if (cancelAreaBtn) cancelAreaBtn.addEventListener('click', closeAddMentorAreaModal);
+
+    // Initial loads
+    loadMentorInterests();
+    loadMentorAreas();
+  });
+
+  function openAddMentorAreaModal(){
+    const modal = document.getElementById('mentor-add-area-modal');
+    const input = document.getElementById('mentor-new-area-input');
+    modal.classList.remove('hidden');
+    input.value = '';
+    input.focus();
+  }
+  function closeAddMentorAreaModal(){
+    document.getElementById('mentor-add-area-modal').classList.add('hidden');
+  }
+})();
+</script>
+
+<!-- Mentor Career Background Modal -->
+<div id="mentor-edit-career-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
+  <div class="bg-white dark:bg-gray-900 rounded-xl p-6 w-full max-w-lg shadow-lg">
+    <h3 class="text-lg font-bold mb-3">Edit Career Background</h3>
+    <textarea id="mentor-career-input" class="w-full min-h-[140px] px-3 py-2 border rounded-lg dark:bg-gray-800" placeholder="Describe your career background..."></textarea>
+    <div class="mt-4 flex justify-end gap-2">
+      <button id="mentor-edit-career-cancel" class="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800">Cancel</button>
+      <button id="mentor-edit-career-save" class="px-4 py-2 rounded-lg bg-primary text-white">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  async function loadMentorCareerBackground(){
+    try {
+      const res = await fetch('/api/mentor/me/career-background', { credentials: 'include' });
+      const el = document.getElementById('mentor-career-background');
+      if (!res.ok){ el.textContent = 'No career background provided'; return; }
+      const data = await res.json();
+      const text = (data && data.career_background) ? data.career_background : '';
+      el.textContent = text || 'No career background provided';
+    } catch(e){
+      const el = document.getElementById('mentor-career-background');
+      el.textContent = 'Error loading career background';
+    }
+  }
+
+  function openCareerModal(){
+    const modal = document.getElementById('mentor-edit-career-modal');
+    const input = document.getElementById('mentor-career-input');
+    const current = document.getElementById('mentor-career-background').textContent || '';
+    modal.classList.remove('hidden');
+    input.value = current === 'No career background provided' ? '' : current;
+    input.focus();
+  }
+  function closeCareerModal(){
+    document.getElementById('mentor-edit-career-modal').classList.add('hidden');
+  }
+
+  async function saveCareerBackground(){
+    const input = document.getElementById('mentor-career-input');
+    const text = (input?.value || '').trim();
+    try {
+      const res = await fetch('/api/mentor/me/career-background', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ career_background: text })
+      });
+      if (res.ok){
+        closeCareerModal();
+        await loadMentorCareerBackground();
+      } else {
+        alert('Error saving career background');
+      }
+    } catch(e){ alert('Error saving career background'); }
+  }
+
+  async function clearCareerBackground(){
+    if (!confirm('Clear your career background?')) return;
+    try {
+      const res = await fetch('/api/mentor/me/career-background', { method: 'DELETE' });
+      if (res.ok){ await loadMentorCareerBackground(); }
+      else { alert('Error clearing career background'); }
+    } catch(e){ alert('Error clearing career background'); }
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    const editBtn = document.getElementById('mentor-edit-career-btn');
+    const clearBtn = document.getElementById('mentor-clear-career-btn');
+    const saveBtn = document.getElementById('mentor-edit-career-save');
+    const cancelBtn = document.getElementById('mentor-edit-career-cancel');
+
+    if (editBtn) editBtn.addEventListener('click', openCareerModal);
+    if (clearBtn) clearBtn.addEventListener('click', clearCareerBackground);
+    if (saveBtn) saveBtn.addEventListener('click', saveCareerBackground);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeCareerModal);
+
+    loadMentorCareerBackground();
+  });
+})();
+</script>

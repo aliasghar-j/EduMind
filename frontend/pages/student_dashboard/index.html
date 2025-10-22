@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EduMind Student Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings:
+          'FILL' 1,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24
+        }
+        
+        /* Calendar specific styles */
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        /* Responsive calendar adjustments */
+        @media (max-width: 768px) {
+            #calendar-grid {
+                gap: 1px;
+            }
+            
+            #calendar-grid > div {
+                min-height: 40px;
+                padding: 4px;
+            }
+            
+            .calendar-event {
+                font-size: 10px;
+                padding: 1px 2px;
+            }
+        }
+        
+        /* Notification animations */
+        .notification-enter {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        
+        .notification-enter-active {
+            transform: translateX(0);
+            opacity: 1;
+            transition: all 0.3s ease-out;
+        }
+        
+        .notification-exit {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .notification-exit-active {
+            transform: translateX(100%);
+            opacity: 0;
+            transition: all 0.3s ease-in;
+        }
+        
+        /* Quiz styles removed */
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#5b13ec",
+                "background-light": "#f6f6f8",
+                "background-dark": "#161022",
+              },
+              fontFamily: {
+                "display": ["Inter", "sans-serif"]
+              },
+              borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#131118] dark:text-white">
+<div class="flex flex-col min-h-screen">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 dark:border-gray-800 px-6 py-4 bg-white dark:bg-background-dark sticky top-0 z-10">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-3">
+<div class="size-8 text-primary">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M13.8261 17.4264C16.7203 18.1174 20.2244 18.5217 24 18.5217C27.7756 18.5217 31.2797 18.1174 34.1739 17.4264C36.9144 16.7722 39.9967 15.2331 41.3563 14.1648L24.8486 40.6391C24.4571 41.267 23.5429 41.267 23.1514 40.6391L6.64374 14.1648C8.00331 15.2331 11.0856 16.7722 13.8261 17.4264Z" fill="currentColor"></path>
+<path clip-rule="evenodd" d="M39.998 12.236C39.9944 12.2537 39.9875 12.2845 39.9748 12.3294C39.9436 12.4399 39.8949 12.5741 39.8346 12.7175C39.8168 12.7597 39.7989 12.8007 39.7813 12.8398C38.5103 13.7113 35.9788 14.9393 33.7095 15.4811C30.9875 16.131 27.6413 16.5217 24 16.5217C20.3587 16.5217 17.0125 16.131 14.2905 15.4811C12.0012 14.9346 9.44505 13.6897 8.18538 12.8168C8.17384 12.7925 8.16216 12.767 8.15052 12.7408C8.09919 12.6249 8.05721 12.5114 8.02977 12.411C8.00356 12.3152 8.00039 12.2667 8.00004 12.2612C8.00004 12.261 8 12.2607 8.00004 12.2612C8.00004 12.2359 8.0104 11.9233 8.68485 11.3686C9.34546 10.8254 10.4222 10.2469 11.9291 9.72276C14.9242 8.68098 19.1919 8 24 8C28.8081 8 33.0758 8.68098 36.0709 9.72276C37.5778 10.2469 38.6545 10.8254 39.3151 11.3686C39.9006 11.8501 39.9857 12.1489 39.998 12.236ZM4.95178 15.2312L21.4543 41.6973C22.6288 43.5809 25.3712 43.5809 26.5457 41.6973L43.0534 15.223C43.0709 15.1948 43.0878 15.1662 43.104 15.1371L41.3563 14.1648C43.104 15.1371 43.1038 15.1374 43.104 15.1371L43.1051 15.135L43.1065 15.1325L43.1101 15.1261L43.1199 15.1082C43.1276 15.094 43.1377 15.0754 43.1497 15.0527C43.1738 15.0075 43.2062 14.9455 43.244 14.8701C43.319 14.7208 43.4196 14.511 43.5217 14.2683C43.6901 13.8679 44 13.0689 44 12.2609C44 10.5573 43.003 9.22254 41.8558 8.2791C40.6947 7.32428 39.1354 6.55361 37.385 5.94477C33.8654 4.72057 29.133 4 24 4C18.867 4 14.1346 4.72057 10.615 5.94478C8.86463 6.55361 7.30529 7.32428 6.14419 8.27911C4.99695 9.22255 3.99999 10.5573 3.99999 12.2609C3.99999 13.1275 4.29264 13.9078 4.49321 14.3607C4.60375 14.6102 4.71348 14.8196 4.79687 14.9689C4.83898 15.0444 4.87547 15.1065 4.9035 15.1529C4.91754 15.1762 4.92954 15.1957 4.93916 15.2111L4.94662 15.223L4.95178 15.2312ZM35.9868 18.996L24 38.22L12.0131 18.996C12.4661 19.1391 12.9179 19.2658 13.3617 19.3718C16.4281 20.1039 20.0901 20.5217 24 20.5217C27.9099 20.5217 31.5719 20.1039 34.6383 19.3718C35.082 19.2658 35.5339 19.1391 35.9868 18.996Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em] dark:text-white">EduMind</h2>
+</div>
+<h1 class="text-xl font-bold">Hello, <span id="student-name">Loading...</span>!</h1>
+</div>
+<div class="flex items-center gap-4">
+
+<button id="logout-btn" class="px-3 py-2 text-sm font-medium rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700">Logout</button>
+<div id="profile-pic" class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 bg-gray-200 dark:bg-gray-700" aria-label="Profile picture"></div>
+<button class="md:hidden flex items-center justify-center rounded-full size-10 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<main class="flex-1 p-6 space-y-8">
+<div>
+<div class="p-4">
+<div class="bg-cover bg-center flex flex-col items-stretch justify-end rounded-xl pt-[132px] shadow-lg" data-alt="A subtle gradient from light blue to lavender" style='background-image: linear-gradient(45deg, rgba(91, 19, 236, 0.7), rgba(169, 132, 255, 0.7)), url("https://lh3.googleusercontent.com/aida-public/AB6AXuDbVYkcMxu6xeINsaXRvLo6kpTY5MUK1MAcx02XuAAp-VOUr2Z0xojww4lSMG03gX6kF0qLMA6bTCJNHKzwjTxrndP6sxFqtKLvCoG7z0IKBadGRiN3rMD3yt3QC8f1w79v7Po396XUGrdfz6FmfnpmbQv8qC0AUKCTb9l7BOEn4rP3ZDZDOE18JzDZHjyTXMp7pZ-zVlpZT1m-MrYWOVjyFbVY7UBfueBR5unjpXIZ8UH6qRH8_vIgibUF2UrHaK12GWB5ZX2emjU");'>
+<div class="flex w-full items-end justify-between gap-4 p-6">
+<div class="flex max-w-[440px] flex-1 flex-col gap-3">
+<p class="text-white tracking-light text-2xl font-bold leading-tight max-w-[440px]">My Interests &amp; Career Choices</p>
+<div id="interests-container" class="flex flex-wrap gap-2">
+<div class="text-white text-sm">Loading interests...</div>
+</div>
+</div>
+<button id="add-interest-btn" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-white text-primary text-sm font-bold leading-normal tracking-[0.015em] transition-transform hover:scale-105">
+<span class="truncate">Add Interest</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2">
+<h2 class="text-2xl font-bold tracking-tight mb-4">My Calendar</h2>
+<div id="calendar-container">
+<!-- Calendar will be dynamically loaded here -->
+<div class="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg">
+<div class="flex items-center justify-center py-8">
+<div class="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent"></div>
+<span class="ml-3 text-gray-600 dark:text-gray-400">Loading calendar...</span>
+</div>
+</div>
+</div>
+</div>
+<div>
+<h2 class="text-2xl font-bold tracking-tight mb-4">Latest Study Materials</h2>
+<div class="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg h-full flex flex-col justify-between">
+<div>
+<div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-8 text-center mb-4">
+<span class="material-symbols-outlined text-4xl text-gray-400">cloud_upload</span>
+<p class="mt-2 text-sm text-gray-500">Drag &amp; drop or <span class="font-semibold text-primary">upload file</span></p>
+</div>
+<h4 class="font-semibold mb-2">AI Summary:</h4>
+<p class="text-sm text-gray-600 dark:text-gray-400">Your AI-generated summary will appear here after uploading a document...</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Quiz section removed entirely -->
+<div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+<div class="lg:col-span-3">
+<h2 class="text-2xl font-bold tracking-tight mb-4">My Performance</h2>
+<div class="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg">
+<img class="w-full h-auto rounded-lg" data-alt="A placeholder line graph showing performance trends over time, with an upward trajectory." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsnERpEp2ksGNi3RQBf_0FqcS8lwqONl1tGAX5pMBx0FqAWK4toqJihjSlzRN7aJoZ_Qs5cD-ul8Ovj9ozMxeo2-Das8dMQsTaJ5bmTIR0xnmwGSaI0Ys4JP68IfKsgWw-s7dbRW6hfDd9jdE053zvFVFQ4Yi9YecFq3WbID7bMmVH3poeHoYW-8U1O211IbQr98FDJwOlgPEH3joOYdlpXmf8XZp53wS0k_7OhoQUXN0W9Zy4bXHkwF2cXMgm3K0IEwz4SAICilc"/>
+</div>
+</div>
+<div class="lg:col-span-2">
+<h2 class="text-2xl font-bold tracking-tight mb-4">Recommended Mentors</h2>
+<div class="space-y-4">
+<div class="bg-white dark:bg-gray-900 p-4 rounded-xl shadow-lg flex items-center gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12" data-alt="Profile picture of Jane Doe" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAhU0ZqLcT2QDM8V5en1-w6t8CDVJtpgydVIT9XPQ7yKhbaLK_twBa8TEegZwta_d9iYpTh2VUSvSRFqzYbStJFE_t7MzuuReIIG4L9vRXxMmwNPXEc-WiZldOJyo3gg2sdOVBRwcIyODDal_-HQltk_sM0oS0v9mu91DLoKoVm-Deniy0W6kxuDbiXFukuUmm7H5gn76Tq1EeY6xAyR2FLhN4fNff8TZQFjaLYqtx7Z2Tc6FmhrW9HanIifxnaCcNWxsstWIexmKg");'></div>
+<div class="flex-1">
+<h4 class="font-bold">Jane Doe</h4>
+<p class="text-sm text-gray-500 dark:text-gray-400">Senior Software Engineer</p>
+</div>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] transition-transform hover:scale-105">Connect</button>
+</div>
+<div class="bg-white dark:bg-gray-900 p-4 rounded-xl shadow-lg flex items-center gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12" data-alt="Profile picture of John Smith" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB4MsTRJWEwC1jlLpP6mrTO3L_gI1ydKmuCLDXCKNZ_bXr6wvPANMlWWCSFRWqaD2M1J2EA_MH2KMdmkCViPV9eJBx1ZmgHe9rOKmf9Q0ju9h0T9k0VKlrypP95yZWaXhnz9jMasuM3kWyld2dL-JQHIR6Ufe_JJNpeDcHI97GXfe0co-gPJIDybzBX3gWcQK00kvEMcqunvRscP_GkSe4jRZOXaR52zT51Ew8uOG1w7rj67neFi5awktq_VEkpoK0H6e3rc8SAZdg");'></div>
+<div class="flex-1">
+<h4 class="font-bold">John Smith</h4>
+<p class="text-sm text-gray-500 dark:text-gray-400">Data Scientist at TechCorp</p>
+</div>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] transition-transform hover:scale-105">Connect</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+<!-- Add Interest Modal -->
+<div id="add-interest-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
+  <div class="bg-white dark:bg-gray-900 rounded-xl p-6 w-full max-w-md shadow-lg">
+    <h3 class="text-lg font-bold mb-3">Add Interest</h3>
+    <input id="new-interest-input" type="text" class="w-full px-3 py-2 border rounded-lg dark:bg-gray-800" placeholder="e.g. Data Science"/>
+    <div class="mt-4 flex justify-end gap-2">
+      <button id="add-interest-cancel" class="px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800">Cancel</button>
+      <button id="add-interest-save" class="px-4 py-2 rounded-lg bg-primary text-white">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Load user data and interests on page load
+document.addEventListener('DOMContentLoaded', async function() {
+    await loadUserData();
+    await loadInterests();
+
+    const addBtn = document.getElementById('add-interest-btn');
+    if (addBtn) addBtn.addEventListener('click', openAddInterestModal);
+    const saveBtn = document.getElementById('add-interest-save');
+    if (saveBtn) saveBtn.addEventListener('click', submitAddInterest);
+    const cancelBtn = document.getElementById('add-interest-cancel');
+    if (cancelBtn) cancelBtn.addEventListener('click', closeAddInterestModal);
+
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) logoutBtn.addEventListener('click', logoutUser);
+});
+
+// Load user data from session
+async function loadUserData() {
+    try {
+        const response = await fetch('/api/auth/me');
+        if (response.ok) {
+            const userData = response.json();
+            userData.then(data => {
+                // Update name
+                const nameElement = document.getElementById('student-name');
+                if (nameElement && data.name) {
+                    nameElement.textContent = data.name;
+                }
+                
+                // Update profile picture
+                const profilePic = document.getElementById('profile-pic');
+                if (profilePic && data.picture) {
+                    profilePic.style.backgroundImage = `url('${data.picture}')`;
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Error loading user data:', error);
+    }
+}
+
+// Load interests from API
+async function loadInterests() {
+    try {
+        const response = await fetch('/api/student/me/interests');
+        if (response.ok) {
+            const data = await response.json();
+            const interests = Array.isArray(data) ? data : (data.interests || []);
+            renderInterests(interests);
+        } else if (response.status === 401) {
+            document.getElementById('interests-container').innerHTML = '<div class="text-white text-sm">Please log in to view interests</div>';
+        } else {
+            document.getElementById('interests-container').innerHTML = '<div class="text-white text-sm">No interests added yet</div>';
+        }
+    } catch (error) {
+        console.error('Error loading interests:', error);
+        document.getElementById('interests-container').innerHTML = '<div class="text-white text-sm">Error loading interests</div>';
+    }
+}
+
+// Render interests as chips
+function renderInterests(interests) {
+    const container = document.getElementById('interests-container');
+    if (interests.length === 0) {
+        container.innerHTML = '<div class="text-white text-sm">No interests added yet</div>';
+        return;
+    }
+    
+    container.innerHTML = interests.map(interest => `
+        <div class="flex items-center gap-1 bg-white/20 text-white px-3 py-1 rounded-full text-sm">
+            <span>${interest}</span>
+            <button onclick="removeInterest('${interest}')" class="ml-1 text-white/80 hover:text-white">×</button>
+        </div>
+    `).join('');
+}
+
+// Modal open/close helpers
+function openAddInterestModal() {
+    const modal = document.getElementById('add-interest-modal');
+    const input = document.getElementById('new-interest-input');
+    if (modal) modal.classList.remove('hidden');
+    if (input) {
+        input.value = '';
+        input.focus();
+    }
+}
+
+function closeAddInterestModal() {
+    const modal = document.getElementById('add-interest-modal');
+    if (modal) modal.classList.add('hidden');
+}
+
+// Submit new interest via modal
+async function submitAddInterest() {
+    const input = document.getElementById('new-interest-input');
+    const interest = (input?.value || '').trim();
+    if (!interest) {
+        alert('Please enter an interest');
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/student/me/interests', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ interest })
+        });
+
+        if (response.ok) {
+            closeAddInterestModal();
+            await loadInterests(); // Reload interests
+        } else {
+            alert('Error adding interest');
+        }
+    } catch (error) {
+        console.error('Error adding interest:', error);
+        alert('Error adding interest');
+    }
+}
+
+// Remove interest
+async function removeInterest(interest) {
+    try {
+        const response = await fetch('/api/student/me/interests', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ interest: interest })
+        });
+        
+        if (response.ok) {
+            await loadInterests(); // Reload interests
+        } else {
+            alert('Error removing interest');
+        }
+    } catch (error) {
+        console.error('Error removing interest:', error);
+        alert('Error removing interest');
+    }
+}
+
+// Logout user and redirect to landing page
+async function logoutUser() {
+    try {
+        const response = await fetch('/api/auth/logout', {
+            method: 'POST'
+        });
+        // Regardless of response, navigate to landing page
+        window.location.href = '/ui/landing';
+    } catch (error) {
+        console.error('Error during logout:', error);
+        // Still redirect to landing to clear client state
+        window.location.href = '/ui/landing';
+    }
+}
+</script>
+
+<!-- Google Calendar Integration -->
+ <script src="/ui/student-dashboard/calendar.js"></script>
+ <script src="/ui/student-dashboard/toast.js"></script>
+ <!-- Quiz script removed -->
+ </body></html>

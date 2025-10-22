@@ -1,0 +1,33 @@
+# Python caches
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+venv/
+.venv/
+ENV/
+
+# Environment variables / secrets
+.env
+
+# Local instance data
+instance/
+
+# IDE/editor configs
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node-related (if any frontend tooling later)
+node_modules/
+
+# Build artifacts
+dist/
+build/
